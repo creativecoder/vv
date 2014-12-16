@@ -22,6 +22,13 @@
 # =============================================================================
 
 version_number=1.4.6
+if [ "$(uname)" == "Darwin" ]; then
+    home_path=$HOME
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    home_path=$HOME
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+    home_path=$USERPROFILE
+fi
 
 normal=$(tput sgr0)
 bold=$(tput bold)
@@ -115,21 +122,21 @@ function vv_bootstrap_update () {
 	github_version=$(curl -s https://api.github.com/repos/bradp/vv/tags | grep "\"name\": \"" | head -n 1 | sed 's/"name": "//' | sed 's/",//' | sed 's/ //g' )
 	download_link="https://github.com/bradp/vv/archive/"$github_version".tar.gz"
 	vv_install_location=$(which vv)
-	curl -L -o ~/"$github_version".tar.gz "$download_link" 2>/dev/null
-	tar -C ~/ -zxvf ~/"$github_version".tar.gz 2>/dev/null
-	rm ~/"$github_version".tar.gz
-	echo "$(cat ~/vv-"$github_version"/vv)" > "$vv_install_location"
-	rm -rf ~/vv-"$github_version"
+	curl -L -o $home_path/"$github_version".tar.gz "$download_link" 2>/dev/null
+	tar -C $home_path/ -zxvf $home_path/"$github_version".tar.gz 2>/dev/null
+	rm $home_path/"$github_version".tar.gz
+	echo "$(cat $home_path/vv-"$github_version"/vv)" > "$vv_install_location"
+	rm -rf $home_path/vv-"$github_version"
 	success "vv has been updated to the latest version. Thanks!"
 }
 
 function auto_update_main () {
 
 	if [[ ! $auto_update_disable = "true" ]]; then
-		if [ ! -f ~/.vv-update ]; then
+		if [ ! -f $home_path/.vv-update ]; then
 			_update_vv_update
 		else
-			source ~/.vv-update
+			source $home_path/.vv-update
 
 			epoch_diff=$(($(_current_epoch) - $DAYS_SINCE_UPDATE_CHECK))
 			epoch_target=7
@@ -138,7 +145,7 @@ function auto_update_main () {
 				github_version=$(curl -s https://api.github.com/repos/bradp/vv/tags | grep "\"name\": \"" | head -n 1 | sed 's/"name": "//' | sed 's/",//' | sed 's/ //g' )
 				if [[ ! $version_number = $github_version ]]; then
 					update_vv
-					rm ~/.vv-update
+					rm $home_path/.vv-update
 					_update_vv_update
 				fi
 			fi
@@ -152,8 +159,8 @@ function _current_epoch() {
 }
 
 function _update_vv_update() {
-	touch ~/.vv-update
-	echo "DAYS_SINCE_UPDATE_CHECK=$(_current_epoch)" > ~/.vv-update
+	touch $home_path/.vv-update
+	echo "DAYS_SINCE_UPDATE_CHECK=$(_current_epoch)" > $home_path/.vv-update
 }
 
 # ask function https://gist.github.com/davejamesmiller/1965569
@@ -262,7 +269,7 @@ function argument_expected() {
 }
 
 function check_for_config_file() {
-	test -f ~/.vv-config && got_config="true"
+	test -f $home_path/.vv-config && got_config="true"
 
 	if [ ! -z $got_config ]; then
 		load_config_values
@@ -284,8 +291,8 @@ function create_config_file() {
 	echo "{"
 	echo "	\"path\": \"$path\""
 	echo "}"
-} >> ~/.vv-config
-info "$HOME/.vv-config was created."
+} >> $home_path/.vv-config
+info "$home_path/.vv-config was created."
 info "	"
 
 }
@@ -296,13 +303,13 @@ function getJsonVal () {
 
 function load_config_values() {
 	#Load path from config file
-	path="$( getJsonVal "['path']" < ~/.vv-config )"
+	path="$( getJsonVal "['path']" < $home_path/.vv-config )"
 	path="$(echo "$path" | sed -e 's/^"//'  -e 's/"$//')"
 }
 
 function load_config_autopdate_config_values() {
 	#Load path from config file
-	auto_update_disable_config="$( getJsonVal "['auto_update_disable']" < ~/.vv-config )"
+	auto_update_disable_config="$( getJsonVal "['auto_update_disable']" < $home_path/.vv-config )"
 	auto_update_disable_config="$(echo "$auto_update_disable_config" | sed -e 's/^"//'  -e 's/"$//')"
 	if [[ $auto_update_disable_config = "true" ]]; then
 		auto_update_disable="true"
@@ -310,7 +317,7 @@ function load_config_autopdate_config_values() {
 }
 
 function load_default_values() {
-	defaults="$( getJsonVal "['defaults']" < ~/.vv-config )"
+	defaults="$( getJsonVal "['defaults']" < $home_path/.vv-config )"
 	defaults="$(echo "$defaults" | sed -e 's/^"//'  -e 's/"$//')"
 }
 
@@ -345,18 +352,18 @@ function get_vvv_path(){
 		current_dir=$(pwd)
 		if [ -e "$current_dir/Vagrantfile" ]; then
 			path=$(pwd)
-		elif [ -e ~/Sites/Vagrantfile ] && [ -z $force_path ]; then
-			path=~/Sites
-		elif [ -e ~/vagrant/Vagrantfile ] && [ -z $force_path ]; then
-			path=~/vagrant
-		elif [ -e ~/vagrant-local/Vagrantfile ] && [ -z $force_path ]; then
-			path=~/vagrant-local
-		elif [ -e ~/projects/vvv/Vagrantfile ] && [ -z $force_path ]; then
-			path=~/projects/vvv
-		elif [ -e ~/working/vvv/Vagrantfile ] && [ -z $force_path ]; then
-			path=~/working/vvv
-		elif [ -e ~/vvv/Vagrantfile ] && [ -z $force_path ]; then
-			path=~/vvv
+		elif [ -e $home_path/Sites/Vagrantfile ] && [ -z $force_path ]; then
+			path=$home_path/Sites
+		elif [ -e $home_path/vagrant/Vagrantfile ] && [ -z $force_path ]; then
+			path=$home_path/vagrant
+		elif [ -e $home_path/vagrant-local/Vagrantfile ] && [ -z $force_path ]; then
+			path=$home_path/vagrant-local
+		elif [ -e $home_path/projects/vvv/Vagrantfile ] && [ -z $force_path ]; then
+			path=$home_path/projects/vvv
+		elif [ -e $home_path/working/vvv/Vagrantfile ] && [ -z $force_path ]; then
+			path=$home_path/working/vvv
+		elif [ -e $home_path/vvv/Vagrantfile ] && [ -z $force_path ]; then
+			path=$home_path/vvv
 		else
 			while [ -z $path ]; do
 				read -r -e -p "VVV install directory: " path
