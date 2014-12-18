@@ -455,7 +455,7 @@ function site_creation_questions() {
 
 	# Get web root of site
 	if [ -z "$web_root" ]; then
-		web_root="htdocs"
+		web_root="app"
 	fi
 
 	if [[ -f "$path"/vv-blueprints.json ]]; then
