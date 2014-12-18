@@ -614,6 +614,11 @@ function create_site_files(){
 	# =============================================================================
 	cd "$path"/www
 	info "Creating site directory, wp-cli.yml, and vvv-init.sh file... "
+
+	if [ ! -z "$git_repo" ]; then
+		git clone --recursive $git_repo $site
+	fi
+
 	if [ ! -d "$site" ]; then
 		mkdir $site
 	fi
@@ -673,10 +678,6 @@ PHP"
 	touch vvv-hosts
 	printf "%s\n" "$domain" >> vvv-hosts
 	echo "Done"
-
-	if [ ! -z "$git_repo" ]; then
-		git clone --recursive $git_repo $web_root/wp-content
-	fi
 
 	# Add site conf file to nginx-config
 	# =============================================================================
