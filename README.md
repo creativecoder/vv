@@ -1,7 +1,7 @@
 # Variable VVV - The Best VVV Site Wizard
 
 	 ██    ██ ██    ██
-	░██   ░██░██   ░██     Variable VVV 1.4.6
+	░██   ░██░██   ░██     Variable VVV 1.4.8
 	░░██ ░██ ░░██ ░██
 	 ░░████   ░░████       The easiest way to set up
 	  ░░██     ░░██        WordPress sites with VVV!
@@ -12,9 +12,9 @@
 
 ## Installation
 
-If you have [Homebrew](http://brew.sh/) installed, you can do
+If you have [Homebrew](http://brew.sh/) installed, you run the following in your terminal application:
 
-	brew install bradp/vv/vv
+	$ brew install bradp/vv/vv
 
 Otherwise you'll want to clone and edit your `$PATH` to include the vv core file.
 
@@ -122,7 +122,7 @@ The blueprint should look like this:
 For themes, plugins, and mu-plugins, you can use:
 
 * Github username/repo
-* Full git url (If a private git link, you'll need to create a public key in Vagrant and authenticate)
+* Full git url
 * Url to zip file
 * WordPress.org slug
 
@@ -135,7 +135,7 @@ You can create as many named blueprints in this file as you would like, all with
 
 Because vv knows where you VVV installation is, you can run it from anywhere. vv will proxy any commands passed into `vv --vagrant <command>` to your VVV location. So `vv --vagrant halt` will halt your VVV vagrant, no matter where you run it.
 
-## vv Options
+## `vv` Options
 
 |Option |Description|
 |------|-----------
@@ -163,12 +163,12 @@ Because vv knows where you VVV installation is, you can run it from anywhere. vv
 |`--name`, `-n`|Desired name for the site directory (e.g. mysite)|
 |`--domain, -d`|Domain of new site|
 |`--blueprint`, `-b`|Name of blueprint to use|
-|`--live_url`, `-u`|Live URL of site|
+|`--live-url`, `-u`|Live URL of site|
 |`--files`, `-f`|Do not provision Vagrant, just create the site directory and files|
 |`--images`, `-i`|Load images by proxy from the live site|
 |`--wp-version`, `-wv`|Version of WordPress to install|
 |`--debug`, `-x`|Turn on WP_DEBUG and WP_DEBUG_LOG|
-|`--multisite`, `-m`|Install as a multisite Can also pass in "subdomain" or "subdirectory"|
+|`--multisite`, `-m`|Install as a multisite. Can also pass in "subdomain" or "subdirectory"|
 |`--sample-content`,`-sc`|Adds sample content to site.|
 |`--username`|Admin username|
 |`--password`|Admin password|
@@ -199,7 +199,7 @@ Because vv knows where you VVV installation is, you can run it from anywhere. vv
 |`--confirm-removal`|Used when removing a deployment to skip the confirmation prompt |
 
 
-## .vv-config
+## `.vv-config`
 
 The first time you run `vv`, it will attempt to locate your VVV installation location. If it can't find it, you will be prompted for it. This will be written to a .vv-config file in your home directory. (`~/.vv-config`) You can also edit this file if you need to change your VVV path.
 
