@@ -242,7 +242,7 @@ ${bold} SITE OPTIONS: ${normal}
     --web-root, -wr 		Subdirectory used for web server root
     --wp-version, -wv 		Version of WordPress to install
     --debug, -x 		Turn on WP_DEBUG and WP_DEBUG_LOG
-    --multisite, -m 		Install as a multisite
+    --multisite, -m 		Install as a multisite, specify 'subdomain' or 'subdirectory'
     --sample-content, -sc 	Add sample content to site
     --username  		Admin username
     --password  		Admin password
@@ -490,54 +490,35 @@ site_creation_questions() {
 	if [ ! -z "$version" ]; then
 		# Attempt to verify the existence of the version (hacky)
 		if curl -s http://codex.wordpress.org/Version_"$version" | grep 'currently no text' > /dev/null; then
-			error "Version $version not found, try again"
-			unset version
+			error "WordPress version $version not found, using current release"
+			version="(release version)"
+			installversion=""
 		else
 			installversion=" --version=$version"
 		fi
 	fi
 
-	while [[ -z "$version" ]]; do
-		# Get WordPress version
-		prompt "WordPress version to install (leave blank for latest version)"
-		read -r version
-		if [ -z "$version" ]; then
-			installversion=""
-			version="(release version)"
-		else
-			# Attempt to verify the existence of the version (hacky)
-			if curl -s http://codex.wordpress.org/Version_"$version" | grep 'currently no text' > /dev/null; then
-				error "Version \"$version\" not found, try again"
-				unset version
-			else
-				installversion=" --version=$version"
-			fi
+	if [ ! -z "$ms_type" ]; then
+		if [[ $ms_type != 'subdomain' && $ms_type != 'subdirectory' ]]; then
+			error "Multisite type must be subdomain or subdirectory."
+			unset ms_type
 		fi
-	done
-
-	if [ -z "$multisite" ]; then
-		prompt "Install as multisite? (y/N)"
-		read -r multisite
-		if [[ $multisite = 'y' ]]; then
-			install_text='multisite-install'
-		else
-			install_text='install'
-		fi
-	fi
-
-	if [[ $multisite = "y" ]]; then
 		while [[ -z $ms_type ]]; do
 			prompt "Install as subdomain or subdirectory? "
 			read -r ms_type
 			if [[ $ms_type != 'subdomain' && $ms_type != 'subdirectory' ]]; then
-				error "Type must be subdomain or subdirectory."
+				error "Multisite type must be subdomain or subdirectory."
 				unset ms_type
 			fi
 		done
 	fi
 
-	if [[ $ms_type = 'subdomain' ]]; then
+	if [ $ms_type = 'subdirectory' ]; then
+		install_text='multisite-install'
+	elif [[ $ms_type = 'subdomain' ]]; then
 		install_text='multisite-install --subdomains'
+	else
+		install_text='install'
 	fi
 
 	if [[ ! -z $git_repo && -d "$path/www/$site" ]]; then
@@ -549,22 +530,9 @@ site_creation_questions() {
 	fi
 
 	add_placeholder_content="";
-	if [ -z "$placeholder_content" ]; then
-		prompt "Add sample content to site (y/N)"
-		read -r placeholder_content
-		if [[ $placeholder_content = "y" ]]; then
-			add_placeholder_content="curl -s https://raw.githubusercontent.com/manovotny/wptest/master/wptest.xml > import.xml && wp import import.xml --authors=skip --allow-root && rm import.xml"
-		fi
+	if [[ $placeholder_content = "y" ]]; then
+		add_placeholder_content="curl -s https://raw.githubusercontent.com/manovotny/wptest/master/wptest.xml > import.xml && wp import import.xml --authors=skip --allow-root && rm import.xml"
 	fi
-
-	# Ask if WP_DEBUG should be turned on
-	while [ -z "$wp_debug" ]; do
-		prompt "Enable WP_DEBUG and WP_DEBUG_LOG (y/N)"
-		read -r wp_debug
-		if [[ $wp_debug != 'y' && $wp_debug != 'n' ]]; then
-			wp_debug="n"
-		fi
-	done
 
 	# Ask if images should be proxied from the live site
 	while [ -z $image_proxy ]; do
