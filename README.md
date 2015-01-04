@@ -14,7 +14,9 @@
 
 This branch is for use at [Exygy](https://exygy.com) and differs in the following ways
 
-- Prompts for web root directory when creating new site and does not use a subdirectory if left blank
+- Prompts for additional options when creating new site
+	- Web root directory; does not use a subdirectory if left blank
+	- Image proxy from live site
 - When a git repository is specified, runs `git clone` before creating the site directory in `www/`. This assumes that the git repo is setup to be cloned as the main site directory, rather than only the wp-content directory
 
 ## Installation

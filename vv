@@ -571,7 +571,16 @@ site_creation_questions() {
 		fi
 	done
 
-	if [[ $image_proxy = "true" ]]; then
+	# Ask if images should be proxied from the live site
+	while [ -z $image_proxy ]; do
+		prompt "Proxy images from live site (y/N)"
+		read image_proxy
+		if [[ $image_proxy != 'y' && $image_proxy != 'n' ]]; then
+			image_proxy="n"
+		fi
+	done
+
+	if [[ $image_proxy = 'y' ]]; then
 		while [ -z "$live_site_url" ]; do
 			prompt "Live site URL (no http:// or trailing slash)"
 			read -r live_site_url
@@ -706,7 +715,7 @@ PHP"
 	sed -e "s/testserver\.com/$nginx_domain_text/" \
 		-e "s|wordpress-local|$site/$web_root|" local-nginx-example.conf-sample > "$site".conf
 
-	if [[ $image_proxy = "true" ]]; then
+	if [[ $image_proxy = "y" ]]; then
 		sed -e $'s|\}|\\\n\\\t# Directives to send expires headers and turn off 404 error logging\.\\\n\\\tlocation ~\* \\.\(js\|css\|png\|jpg\|jpeg\|gif\|ico\)\$ \{\\\n\\\t\texpires 24h;\\\n\\\t\\\tlog_not_found off;\\\n\\\t\\\ttry_files \$uri \$uri\/ @production;\\\n\\\t\}\\\n\\\n\\\tlocation @production \{\\\n\\\t\\\tresolver 8\.8\.8\.8;\\\n\\\t\\\tproxy_pass http://LIVE_URL/$uri;\\\n\\\t\}\\\n\}|' -e "s|LIVE_URL|"$live_site_url"|" "$site".conf > tmp.conf
 		rm "$site".conf
 		mv tmp.conf "$site".conf
@@ -1134,7 +1143,7 @@ check_args() {
 				shift
 				;;
 			-i|--images)
-				image_proxy="true"
+				image_proxy="y"
 				shift
 				;;
 			-x|--debug)
