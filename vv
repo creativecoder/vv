@@ -683,6 +683,13 @@ PHP"
 		echo "	cd -"
 		echo "$blueprint_text"
 		echo "fi"
+		echo "if [ -f composer.lock ]; then"
+		echo "	echo 'Running composer update'"
+		echo "	composer update"
+		echo "elif [ -f composer.json ]; then"
+		echo "	echo 'Running composer install'"
+		echo "	composer install"
+		echo "fi"
 	} >> vvv-init.sh
 
 	echo "Done"
