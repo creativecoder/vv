@@ -480,10 +480,10 @@ site_creation_questions() {
 
 	# Get local URL
 	while [ -z "$domain" ]; do
-		prompt "Domain to use (leave blank for $site.dev)"
+		prompt "Domain to use (leave blank for $site.vvv)"
 		read -r domain
 		if [ -z "$domain" ]; then
-			domain="$site.dev"
+			domain="$site.vvv"
 		fi
 	done
 
