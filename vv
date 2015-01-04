@@ -534,6 +534,15 @@ site_creation_questions() {
 		add_placeholder_content="curl -s https://raw.githubusercontent.com/manovotny/wptest/master/wptest.xml > import.xml && wp import import.xml --authors=skip --allow-root && rm import.xml"
 	fi
 
+	# Ask if WP_DEBUG should be turned on
+	while [ -z "$wp_debug" ]; do
+		prompt "Enable WP_DEBUG and WP_DEBUG_LOG (Y/n)"
+		read -r wp_debug
+		if [ $wp_debug != 'n' ]; then
+			wp_debug="y"
+		fi
+	done
+
 	# Ask if images should be proxied from the live site
 	while [ -z $image_proxy ]; do
 		prompt "Proxy images from live site (y/N)"
