@@ -461,9 +461,9 @@ site_creation_questions() {
 		read -r web_root
 		if [ -z "$web_root" ]; then
 			web_root="."
-			web_root_text = "current"
+			web_root_text="current"
 		else
-			web_root_text = "$web_root"
+			web_root_text="$web_root"
 		fi
 	done
 
@@ -513,7 +513,7 @@ site_creation_questions() {
 		done
 	fi
 
-	if [ $ms_type = 'subdirectory' ]; then
+	if [[ $ms_type = 'subdirectory' ]]; then
 		install_text='multisite-install'
 	elif [[ $ms_type = 'subdomain' ]]; then
 		install_text='multisite-install --subdomains'
@@ -538,7 +538,7 @@ site_creation_questions() {
 	while [ -z "$wp_debug" ]; do
 		prompt "Enable WP_DEBUG and WP_DEBUG_LOG (Y/n)"
 		read -r wp_debug
-		if [ $wp_debug != 'n' ]; then
+		if [[ $wp_debug != 'n' ]]; then
 			wp_debug="y"
 		fi
 	done
@@ -656,7 +656,6 @@ PHP"
 		echo "	fi"
 		echo "	wp core $install_text --url=$domain --title=\"$site\" --admin_user=$username --admin_password=$password --admin_email=$email --allow-root"
 		echo "	$add_placeholder_content"
-		echo "	"
 		echo "	cd -"
 		echo "$blueprint_text"
 		echo "fi"
@@ -671,7 +670,7 @@ PHP"
 		echo "	echo 'Running npm update for $site'"
 		echo "	npm update"
 		echo "elif [ -f package.json ]; then"
-		echo "	echo 'Running npm install for $site"
+		echo "	echo 'Running npm install for $site'"
 		echo "	npm install"
 		echo "fi"
 	} >> vvv-init.sh
