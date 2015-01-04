@@ -17,6 +17,11 @@ This branch is for use at [Exygy](https://exygy.com) and differs in the followin
 - Prompts for additional options when creating new site
 	- Web root directory; does not use a subdirectory if left blank
 	- Image proxy from live site
+	- Defaults wp_debug option to yes
+- Removes prompts for the following options when creating a new site (these can still be set with option flags)
+	- WordPress version (defaults to latest version)
+	- Multisite install (defaults to regular install)
+	- Install sample content (defaults to no)
 - When a git repository is specified, runs `git clone` before creating the site directory in `www/`. This assumes that the git repo is setup to be cloned as the main site directory, rather than only the wp-content directory
 - Provisioning script
 	- Don't create wp-config file, if one already exists in the site directory or web root subdirectory
