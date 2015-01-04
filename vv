@@ -461,9 +461,16 @@ site_creation_questions() {
 	db_name=$site
 
 	# Get web root of site
-	if [ -z "$web_root" ]; then
-		web_root="app"
-	fi
+	while [ -z "$web_root" ]; do
+		prompt "Subdirectory to use as web server root and where to install WordPress (leave blank if not a subdirectory)"
+		read -r web_root
+		if [ -z "$web_root" ]; then
+			web_root="."
+			web_root_text = "current"
+		else
+			web_root_text = "$web_root"
+		fi
+	done
 
 	if [[ -f "$path"/vv-blueprints.json ]]; then
 		# Get local URL
@@ -542,7 +549,7 @@ site_creation_questions() {
 		error "$path/www/$site already exists. Skipping git clone."
 		unset git_repo
 	elif [[ -z "$git_repo" && ! -d "$path/www/$site" ]]; then
-		prompt "Git repo to clone as wp-content (leave blank to skip)"
+		prompt "Git repo to clone as site directory (leave blank to skip)"
 		read -r git_repo
 	fi
 
@@ -595,7 +602,7 @@ confirm_site_creation() {
 	fi
 
 	info "\nProvisioning Vagrant will do the following:"
-	echo -e "* Create database $site\n* Install WordPress $version in the $web_root directory\n* Make the site visible at $domain"
+	echo -e "* Create database $site\n* Install WordPress $version in the $web_root_text directory\n* Make the site visible at $domain"
 
 	info "\n"
 	while [ -z "$continue_create" ]; do

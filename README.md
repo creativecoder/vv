@@ -10,6 +10,13 @@
 
 `vv` makes it extremely easy to create a new WordPress site using [Varying Vagrant Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV). `vv` supports site creation with many different options; site blueprints to set up all your plugins, themes, and more; deployments; and lots more features.
 
+## Exygy Branch
+
+This branch is for use at [Exygy](https://exygy.com) and differs in the following ways
+
+- Prompts for web root directory when creating new site and does not use a subdirectory if left blank
+- When a git repository is specified, runs `git clone` before creating the site directory in `www/`. This assumes that the git repo is setup to be cloned as the main site directory, rather than only the wp-content directory
+
 ## Installation
 
 If you have [Homebrew](http://brew.sh/) installed, you run the following in your terminal application:
