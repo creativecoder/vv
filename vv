@@ -521,16 +521,17 @@ site_creation_questions() {
 		fi
 	done
 
-	if [ ! -z "$version" ]; then
-		# Attempt to verify the existence of the version (hacky)
-		if curl -s http://codex.wordpress.org/Version_"$version" | grep 'currently no text' > /dev/null; then
-			error "WordPress version $version not found, using current release"
-			version="(release version)"
-			installversion=""
-		else
-			installversion=" --version=$version"
+	if [ "$no_wp" = "false" ]; then
+		if [ ! -z "$version" ]; then
+			# Attempt to verify the existence of the version (hacky)
+			if curl -s http://codex.wordpress.org/Version_"$version" | grep 'currently no text' > /dev/null; then
+				error "WordPress version $version not found, using current release"
+				version="(release version)"
+				installversion=""
+			else
+				installversion=" --version=$version"
+			fi
 		fi
-	fi
 
 		if [ -z "$multisite" ]; then
 			if [ "$use_defaults" = "false" ]; then
@@ -557,9 +558,9 @@ site_creation_questions() {
 			done
 		fi
 
-	if [[ $ms_type = 'subdomain' ]]; then
-		install_text='multisite-install --subdomains'
-	fi
+		if [[ $ms_type = 'subdomain' ]]; then
+			install_text='multisite-install --subdomains'
+		fi
 
 		if [[ ! -z $git_repo && -d "$path/"$sites_folder"/$site" ]]; then
 			error "$path/"$sites_folder"/$site already exists. Skipping git clone."
