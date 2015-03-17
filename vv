@@ -600,11 +600,11 @@ site_creation_questions() {
 		# Ask if WP_DEBUG should be turned on
 		while [ -z "$wp_debug" ]; do
 			if [ "$use_defaults" = "false" ]; then
-				prompt "Enable WP_DEBUG and WP_DEBUG_LOG (y/N)"
+				prompt "Enable WP_DEBUG and WP_DEBUG_LOG (Y/n)"
 				read -r wp_debug
 			fi
 			if [[ $wp_debug != 'y' && $wp_debug != 'n' ]]; then
-				wp_debug="n"
+				wp_debug="y"
 			fi
 		done
 
