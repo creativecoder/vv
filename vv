@@ -533,16 +533,10 @@ site_creation_questions() {
 			fi
 		fi
 
-		if [ -z "$multisite" ]; then
-			if [ "$use_defaults" = "false" ]; then
-				prompt "Install as multisite? (y/N)"
-				read -r multisite
-			fi
-			if [[ $multisite = 'y' ]]; then
-				install_text='multisite-install'
-			else
-				install_text='install'
-			fi
+		if [[ ! -z $multisite && $multisite = "y" ]]; then
+			install_text='multisite-install'
+		else
+			install_text='install'
 		fi
 
 		if [[ $multisite = "y" ]]; then
@@ -1181,6 +1175,7 @@ check_args() {
 				;;
 			-m|--multi-site|--multi_site|--multisite)
 				argument_expected "$1" "$2"
+				multisite = "y"
 				ms_type=$2
 				shift 2
 				;;
