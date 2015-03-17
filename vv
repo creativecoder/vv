@@ -1347,7 +1347,6 @@ check_args() {
 }
 
 main() {
-	auto_update_main
 
 	if [ -z "$1" ]; then
 	    show_help
