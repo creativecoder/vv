@@ -573,13 +573,6 @@ site_creation_questions() {
 			fi
 		fi
 
-		if [ -z "$remove_defaults" ]; then
-			if [ "$use_defaults" = "false" ]; then
-				prompt "Remove default themes and plugins? (y/N)"
-				read -r remove_defaults
-			fi
-		fi
-
 		add_placeholder_content="";
 		if [[ $placeholder_content = "y" ]]; then
 			add_placeholder_content="curl -s https://raw.githubusercontent.com/manovotny/wptest/master/wptest.xml > import.xml && wp plugin install wordpress-importer --allow-root  && wp plugin activate wordpress-importer --allow-root  && wp import import.xml --authors=skip --allow-root && rm import.xml"

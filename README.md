@@ -22,6 +22,7 @@ This branch is for use at [Exygy](https://exygy.com) and differs in the followin
 	- WordPress version (defaults to latest version)
 	- Multisite install (defaults to regular install)
 	- Install sample content (defaults to no)
+	- Remove default themes and plugins
 - When a git repository is specified, runs `git clone` before creating the site directory in `www/`. This assumes that the git repo is setup to be cloned as the main site directory, rather than only the wp-content directory
 - Provisioning script
 	- Don't create wp-config file, if one already exists in the site directory or web root subdirectory
