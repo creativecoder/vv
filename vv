@@ -581,14 +581,8 @@ site_creation_questions() {
 		fi
 
 		add_placeholder_content="";
-		if [ -z "$placeholder_content" ]; then
-			if [ "$use_defaults" = "false" ]; then
-				prompt "Add sample content to site (y/N)"
-				read -r placeholder_content
-			fi
-			if [[ $placeholder_content = "y" ]]; then
-				add_placeholder_content="curl -s https://raw.githubusercontent.com/manovotny/wptest/master/wptest.xml > import.xml && wp plugin install wordpress-importer --allow-root  && wp plugin activate wordpress-importer --allow-root  && wp import import.xml --authors=skip --allow-root && rm import.xml"
-			fi
+		if [[ $placeholder_content = "y" ]]; then
+			add_placeholder_content="curl -s https://raw.githubusercontent.com/manovotny/wptest/master/wptest.xml > import.xml && wp plugin install wordpress-importer --allow-root  && wp plugin activate wordpress-importer --allow-root  && wp import import.xml --authors=skip --allow-root && rm import.xml"
 		fi
 
 		# Ask if WP_DEBUG should be turned on
